@@ -201,7 +201,7 @@ void PrintCharValues(int BytesRead)
 void PrintUsage(const char *arg0)
 {
     printf("Usage:\n");
-    printf("\%s fileName [<MaxByteToRead>]\n", arg0);
-    printf("\%s fileName <StartOffset> <MaxByteToRead> [<BytesPerLine>]\n", arg0);
+    printf("\t%s fileName [<MaxByteToRead>]\n", arg0);
+    printf("\t%s fileName <StartOffset> <MaxByteToRead> [<BytesPerLine>]\n", arg0);
     exit(0);
 }
