@@ -67,6 +67,11 @@ int main(int argc, const char * argv[])
         PrintLine(offset, BytesRead);
         offset += BytesPerLine;
     }
+    if(file)
+    {
+        fclose(file);
+        file = NULL;
+    }
     return 0;
 }
 
@@ -116,6 +121,11 @@ void HandleOffset()
         if (seek)
         {
             printf("Skipping %lld bytes failed!\n", StartOffset);
+            if(file)
+            {
+                fclose(file);
+                file = NULL;
+            }
             exit(2);
         }
         printf("%lld bytes skipped!\n", StartOffset);
