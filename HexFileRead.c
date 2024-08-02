@@ -10,9 +10,11 @@
 #include <stdlib.h>
 
 typedef unsigned long long UInt64;
+const int SIZE_1GB = 1073741824;
 
 int ProcessingArgs(int argc, const char* argv[]);
 void HandleOffset(void);
+void CheckSeek(int seekResult);
 int ReadLine(void);
 void PrintLine(UInt64 offset, int BytesRead);
 void PrintOffset(UInt64 offset);
@@ -117,18 +119,35 @@ void HandleOffset()
          */
         fread(temp, sizeof(char), 1, file);
         /* Tricky thing ends */
-        int seek = fseek(file, StartOffset, SEEK_SET);
-        if (seek)
+        UInt64 remainingOffset = StartOffset;
+
+        int seek = fseek(file, 0, SEEK_SET);
+        CheckSeek(seek);
+
+        while (remainingOffset > SIZE_1GB)
         {
-            printf("Skipping %lld bytes failed!\n", StartOffset);
-            if(file)
-            {
-                fclose(file);
-                file = NULL;
-            }
-            exit(2);
+            seek = fseek(file, SIZE_1GB, SEEK_CUR);
+            CheckSeek(seek);
+            remainingOffset -= SIZE_1GB;
         }
+
+        seek = fseek(file, remainingOffset, SEEK_CUR);
+        CheckSeek(seek);
         printf("%lld bytes skipped!\n", StartOffset);
+    }
+}
+
+void CheckSeek(int seekResult)
+{
+    if (seekResult)
+    {
+        printf("Skipping %lld bytes failed!\n", StartOffset);
+        if(file)
+        {
+            fclose(file);
+            file = NULL;
+        }
+        exit(2);
     }
 }
 
